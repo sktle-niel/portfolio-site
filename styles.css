@@ -610,6 +610,8 @@ html.vt.theme-ready body * { transition: none !important; }
 @media (max-width: 640px) { .proj-grid { grid-template-columns: 1fr; } }
 
 .card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--g200);
@@ -621,11 +623,54 @@ html.vt.theme-ready body * { transition: none !important; }
   text-decoration: none;
   color: inherit;
 }
+
+/* Accent line sweeping across the top edge — linked cards only */
+.card--link::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ink), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s var(--ease);
+  pointer-events: none;
+  z-index: 4;
+}
+.card--link:hover::before,
+.card--link:focus-within::before { transform: scaleX(1); }
+
+/* Stretched link: whole card clickable + keyboard-focusable */
+.card--link { cursor: pointer; }
+.card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+}
+.card-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Hover: gentle lift for all, stronger + interactive for linked */
 .card:hover {
   box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
   border-color: var(--g300);
 }
+.card--link:hover,
+.card--link:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--g400);
+}
+/* Press feedback on click */
+.card--link:active {
+  transform: translateY(-1px) scale(.994);
+  box-shadow: var(--shadow-rest);
+  transition-duration: .09s;
+}
+
 .card-shot {
   aspect-ratio: 16 / 10;
   overflow: hidden;
@@ -639,6 +684,8 @@ html.vt.theme-ready body * { transition: none !important; }
   transition: transform .5s var(--ease);
 }
 .card:hover .card-shot img { transform: scale(1.04); }
+.card--link:hover .card-shot img,
+.card--link:focus-within .card-shot img { transform: scale(1.06); }
 .card-body { padding: 1.25rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
 .card-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .card h3 { margin: 0; font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
@@ -655,7 +702,23 @@ html.vt.theme-ready body * { transition: none !important; }
   padding: 2px 8px;
 }
 .tag.featured { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tag.wip {
+  border-style: dashed;
+  color: var(--ink);
+  position: relative;
+  padding-left: 16px;
+}
+.tag.wip::before {
+  content: "";
+  position: absolute;
+  left: 7px; top: 50%;
+  width: 5px; height: 5px;
+  margin-top: -2.5px;
+  border-radius: 50%;
+  background: currentColor;
+}
 .card-go {
+  position: relative;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: .5px;
@@ -664,10 +727,26 @@ html.vt.theme-ready body * { transition: none !important; }
   display: inline-flex;
   align-items: center;
   gap: .3rem;
+  white-space: nowrap;
+}
+.card-go::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -3px;
+  width: 100%;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
 }
 .card-go .arr { transition: transform .2s var(--ease); }
-.card:hover .card-go { color: var(--ink); }
-.card:hover .card-go .arr { transform: translate(2px, -2px); }
+.card--link:hover .card-go,
+.card--link:focus-within .card-go { color: var(--ink); }
+.card--link:hover .card-go::after,
+.card--link:focus-within .card-go::after { transform: scaleX(1); }
+.card--link:hover .card-go .arr,
+.card--link:focus-within .card-go .arr { transform: translate(2px, -2px); }
 
 /* Other (text) projects */
 .proj-more { margin-top: 1rem; }
