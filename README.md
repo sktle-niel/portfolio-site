@@ -38,7 +38,6 @@ Clean URLs (`/projects`, no `.html`, no `#`) work best when the site is hosted a
 
 - **Text / projects:** edit `index.html`.
 - **Contact links:** email and phone are assembled in `main.js` (anti-scraping) from the `data-u` / `data-d` / `data-p` attributes in `index.html`.
-- **LinkedIn:** currently points to `https://www.linkedin.com/feed/`. Replace with your public profile URL (`https://www.linkedin.com/in/your-handle`) in the three `linkedin.com` links in `index.html` so visitors reach *your* profile instead of their own feed.
 
 ## Anti-spam / security (frontend)
 
